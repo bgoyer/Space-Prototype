@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class Pilot : MonoBehaviour
 {
-
+   public void doSomething()
+    {
+        print("Bla");
+    }
 }
