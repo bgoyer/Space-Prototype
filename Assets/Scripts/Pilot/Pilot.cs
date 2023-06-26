@@ -2,10 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pilot : MonoBehaviour
+public class Pilot
 {
-   public void doSomething()
+    public Pilot(string name)
     {
-        print("Bla");
+        Name = name;
     }
+
+   public string Name { get; set; }
+   public Ship CurrentShip { get; set; }
+   public void Rotate()
+   {
+        
+   }
+    
+    public void Accelerate()
+    {
+
+    }
+
+    public void AssignShip()
+    {
+
+    }
+
+
+
 }
