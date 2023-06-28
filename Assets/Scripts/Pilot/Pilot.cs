@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pilot
+public class Pilot : MonoBehaviour
 {
     public Pilot(string name)
     {
@@ -15,11 +15,6 @@ public class Pilot
    {
         
    }
-    
-    public void Accelerate()
-    {
-
-    }
 
     public void AssignShip()
     {

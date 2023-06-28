@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class AI : MonoBehaviour
+public class AI : Pilot
 {
-    public void Update()
+    public AI(string name) : base(name)
     {
-        
     }
 }
