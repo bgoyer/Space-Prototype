@@ -11,7 +11,7 @@
                     "id": "d8ad5a88-bc62-44d5-8894-adbf29a96060",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -20,7 +20,7 @@
                     "id": "53e407ce-2516-4a2e-832a-7048414e4e39",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 },
                 {
@@ -29,7 +29,16 @@
                     "id": "48705dcb-e3c0-470b-944b-db11313431b2",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TryReverseThrust",
+                    "type": "Button",
+                    "id": "94f8554b-36e6-4bed-a533-585c3683cbb9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
                 }
             ],
@@ -49,7 +58,7 @@
                     "name": "",
                     "id": "47b63aef-5be3-4d46-8a31-2fcc91cfcb78",
                     "path": "<Keyboard>/w",
-                    "interactions": "Press(behavior=2)",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Keyboard/Mouse",
                     "action": "Accelerate",
@@ -88,6 +97,17 @@
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "c0a3434c-c744-45e1-85e0-aad5c71c334f",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TryReverseThrust",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

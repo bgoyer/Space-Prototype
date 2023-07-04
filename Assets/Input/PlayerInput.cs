@@ -33,7 +33,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""id"": ""d8ad5a88-bc62-44d5-8894-adbf29a96060"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -42,7 +42,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""id"": ""53e407ce-2516-4a2e-832a-7048414e4e39"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -51,7 +51,16 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""id"": ""48705dcb-e3c0-470b-944b-db11313431b2"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TryReverseThrust"",
+                    ""type"": ""Button"",
+                    ""id"": ""94f8554b-36e6-4bed-a533-585c3683cbb9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""initialStateCheck"": false
                 }
             ],
@@ -71,7 +80,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""47b63aef-5be3-4d46-8a31-2fcc91cfcb78"",
                     ""path"": ""<Keyboard>/w"",
-                    ""interactions"": ""Press(behavior=2)"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard/Mouse"",
                     ""action"": ""Accelerate"",
@@ -110,6 +119,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c0a3434c-c744-45e1-85e0-aad5c71c334f"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TryReverseThrust"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -138,6 +158,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_Accelerate = m_Player.FindAction("Accelerate", throwIfNotFound: true);
         m_Player_Rotate = m_Player.FindAction("Rotate", throwIfNotFound: true);
         m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
+        m_Player_TryReverseThrust = m_Player.FindAction("TryReverseThrust", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -202,6 +223,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Accelerate;
     private readonly InputAction m_Player_Rotate;
     private readonly InputAction m_Player_Shoot;
+    private readonly InputAction m_Player_TryReverseThrust;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -209,6 +231,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Accelerate => m_Wrapper.m_Player_Accelerate;
         public InputAction @Rotate => m_Wrapper.m_Player_Rotate;
         public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
+        public InputAction @TryReverseThrust => m_Wrapper.m_Player_TryReverseThrust;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -227,6 +250,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started += instance.OnShoot;
             @Shoot.performed += instance.OnShoot;
             @Shoot.canceled += instance.OnShoot;
+            @TryReverseThrust.started += instance.OnTryReverseThrust;
+            @TryReverseThrust.performed += instance.OnTryReverseThrust;
+            @TryReverseThrust.canceled += instance.OnTryReverseThrust;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -240,6 +266,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started -= instance.OnShoot;
             @Shoot.performed -= instance.OnShoot;
             @Shoot.canceled -= instance.OnShoot;
+            @TryReverseThrust.started -= instance.OnTryReverseThrust;
+            @TryReverseThrust.performed -= instance.OnTryReverseThrust;
+            @TryReverseThrust.canceled -= instance.OnTryReverseThrust;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -271,5 +300,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnAccelerate(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
+        void OnTryReverseThrust(InputAction.CallbackContext context);
     }
 }
