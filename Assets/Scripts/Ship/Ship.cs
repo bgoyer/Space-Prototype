@@ -109,7 +109,8 @@ public class Ship : MonoBehaviour, IDamageable
             ShipGO.transform.localScale = new Vector3(.1f,.1f,1f);
             ShipGO.transform.position = position;
 
-            GameObject InventoryGO = new GameObject("Inventory");
+            GameObject inventoryGO = new GameObject("Inventory");
+            inventoryGO.transform.parent = ShipGO.transform;
 
             Ship ship = (Ship)ShipGO.GetComponent(shipType);
             ship.Name= name;
