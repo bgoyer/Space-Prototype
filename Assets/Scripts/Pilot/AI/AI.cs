@@ -8,4 +8,8 @@ public class AI : Pilot
     public AI(string name) : base(name)
     {
     }
+
+
+    
+
 }

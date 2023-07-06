@@ -113,7 +113,7 @@ public class Ship : MonoBehaviour, IDamageable
             inventoryGO.transform.parent = ShipGO.transform;
 
             Ship ship = (Ship)ShipGO.GetComponent(shipType);
-            ship.Name= name;
+            ship.Name = name;
 
             ShipGO.AddComponent<BasicThruster>();
             ShipGO.AddComponent<BasicTurning>();
