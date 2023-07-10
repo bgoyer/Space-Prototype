@@ -17,8 +17,7 @@ public abstract class Turning : Outfit
     /// <param name="modifier"></param>
     public void Rotate(float modifier)
     {
-        print(Force);
         modifier = modifier > 0f ? Mathf.Min(modifier, 1f) : Mathf.Max(modifier, -1f);
-        transform.GetComponent<Rigidbody2D>().AddTorque(Force * -modifier * Time.deltaTime, ForceMode2D.Impulse);
+        transform.GetComponent<Rigidbody2D>().AddTorque(Force * -modifier * 100 * Time.deltaTime, ForceMode2D.Impulse);
     }
 }

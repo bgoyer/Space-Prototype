@@ -5,7 +5,6 @@ namespace Assets.Scripts.System
     public class BackgroundScroller : MonoBehaviour
     {
         public float Parralax = 2f;
-        public GameObject Player;
 
         private void Update()
         {
