@@ -2,10 +2,13 @@ using Cinemachine;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Ship : MonoBehaviour, IDamageable
 {
-    public Ship(string name, string spriteName, string hullType, int mass, int shields, int hull, int neededCrew, int crew, int bunks, int heatDissipation, int heatCappacity, int heat, int fuelCapacity, int fuel, int engeryCapacity, int engery, int cargoCapacity, int currentCargoSpace, Dictionary<Vector2, bool> weaponSlots)
+    public Ship(string name, string spriteName, string hullType, int mass, int shields, int hull, int neededCrew, int crew, int bunks, int heatDissipation, int heatCappacity, int heat, int fuelCapacity, int fuel, int engeryCapacity, int engery, int cargoCapacity, int currentCargoSpace, Dictionary<Vector2, bool> weaponSlots, Dictionary<string, int> outfits)
     {
         Name = name;
         SpriteName = spriteName;
@@ -26,6 +29,7 @@ public class Ship : MonoBehaviour, IDamageable
         CargoCapacity = cargoCapacity;
         CurrentCargoSpace = currentCargoSpace;
         WeaponSlots = weaponSlots;
+        Outfits = outfits;
     }
 
     public string Name { get; set; }
@@ -46,7 +50,18 @@ public class Ship : MonoBehaviour, IDamageable
     public int Engery { get; set; }
     public int CargoCapacity { get; set; }
     public int CurrentCargoSpace { get; set; }
+    
+    /// <summary>
+    /// Vector2: Where the bullet spawns <br/><br/>
+    /// Bool: Is the WeaponSlot Empty
+    /// </summary>
     public Dictionary<Vector2, bool> WeaponSlots { get; set; }
+
+    /// <summary>
+    /// String: The Type of Outfit <br/><br/>
+    /// Int: Amount of the outfit on the ship
+    /// </summary>
+    public Dictionary<string, int> Outfits { get; }
 
     public void Accelerate(float modifier)
     {
@@ -67,7 +82,7 @@ public class Ship : MonoBehaviour, IDamageable
     public void AddInventory<T>() where T : Item
     {
         GameObject inventory = transform.Find("Inventory").gameObject;
-        GameObject newItem = new GameObject();
+        GameObject newItem = new();
         newItem.transform.parent = inventory.transform;
         newItem.AddComponent<T>();
         newItem.name = newItem.GetComponent<T>().Name;
@@ -93,62 +108,24 @@ public class Ship : MonoBehaviour, IDamageable
 
 
 
-    public static void Create(string name,string shipTypeName, Vector3? position = null, bool isPlayer = false)
+    public static void Create(string name,string shipTypeName, Vector3? position = null, bool isPlayer = false, string aiType = "NA")
     {
+
         Type shipType = Type.GetType(shipTypeName);
         if (shipType != null && shipType.IsSubclassOf(typeof(Ship)))
         {
-            GameObject ShipGO = new GameObject(name);
-            ShipGO.AddComponent(shipType);
-            ShipGO.transform.localScale = new Vector3(.1f,.1f,1f);
-            if (position.HasValue)
-            {
-                ShipGO.transform.position = position.Value;
-            }
-            else
-            {
-                if (!isPlayer)
-                {
-                    System.Random _random = new System.Random();
-                    Player player = GameObject.FindAnyObjectByType<Player>();
-                    ShipGO.transform.position = _random.Next(-1, 1) * player.transform.parent.position + new Vector3(_random.Next(-100, 100), _random.Next(-100, 100));
-                }
-                else
-                {
-                    ShipGO.transform.position = new Vector3(0, 0, 0);
-                }
-            }
-
-
-
-            GameObject inventoryGO = new GameObject("Inventory");
-            inventoryGO.transform.parent = ShipGO.transform;
-
-            Ship ship = (Ship)ShipGO.GetComponent(shipType);
-            ship.Name = name;
-
-            ShipGO.AddComponent<BasicThruster>();
-            ShipGO.AddComponent<BasicTurning>();
-            ShipGO.AddComponent<SpriteRenderer>();
-            ShipGO.AddComponent<Rigidbody2D>();
+            GameObject ShipGO = CreateShipGameObject(name, shipType, position, isPlayer);
+ 
+            Ship ship = CreateShipClass(ShipGO, shipType, name);
             
+            Rigidbody2D rigidbody2D = CreateRigidbody2D(ShipGO, ship);
 
-            Rigidbody2D rigidbody2D = ShipGO.GetComponent<Rigidbody2D>();
-            rigidbody2D.mass = ship.Mass;
-            rigidbody2D.angularDrag = 500;
-            rigidbody2D.drag = 0;
-            rigidbody2D.gravityScale = 0;
+            SetShipSprite(ShipGO, ship);
+
+            CreateOutfits(ShipGO, ship, ship.Outfits);
 
 
-            Sprite sprite = Resources.Load<Sprite>("Images/Sprites/Ships/" + ship.SpriteName);
-            if (!sprite)
-            {
-                Debug.LogError("Sprite not found at path: " + "Images/Sprites/Ships/" + ship.SpriteName);
-            }
-            else
-            {
-                ShipGO.GetComponent<SpriteRenderer>().sprite = sprite;
-            }
+            
             
             if (isPlayer) 
             { 
@@ -158,11 +135,84 @@ public class Ship : MonoBehaviour, IDamageable
                 CMVC.LookAt = ShipGO.transform;
                 
             } else ShipGO.AddComponent<AI>();
-           
+
+            
+
         }
         else
         {
             Debug.LogError("Invalid Type: " + shipTypeName);
+        }
+    }
+
+
+
+    private static GameObject CreateShipGameObject(string name, Type shipType, Vector3? position, bool isPlayer)
+    {
+        GameObject ShipGO = new(name);
+        ShipGO.AddComponent(shipType);
+        ShipGO.transform.localScale = new Vector3(.1f, .1f, 1f);
+
+        if (position.HasValue)
+        {
+            ShipGO.transform.position = position.Value;
+        }
+        else
+        {
+            if (!isPlayer)
+            {
+                System.Random _random = new();
+                Player player = GameObject.FindAnyObjectByType<Player>();
+                ShipGO.transform.position = _random.Next(-1, 1) * player.transform.parent.position + new Vector3(_random.Next(-100, 100), _random.Next(-100, 100));
+            }
+            else
+            {
+                ShipGO.transform.position = new Vector3(0, 0, 0);
+            }
+        }
+        GameObject inventoryGO = new("Inventory");
+        inventoryGO.transform.parent = ShipGO.transform;
+
+        
+        return ShipGO;
+    }
+    private static Ship CreateShipClass(GameObject ShipGO, Type shipType, string name)
+    {
+        Ship ship = (Ship)ShipGO.GetComponent(shipType);
+        ship.Name = name;
+        return ship;
+    }
+
+    private static Rigidbody2D CreateRigidbody2D(GameObject ShipGO, Ship ship)
+    {
+        Rigidbody2D rigidbody2D = ShipGO.AddComponent<Rigidbody2D>();
+        rigidbody2D.mass = ship.Mass;
+        rigidbody2D.angularDrag = 500;
+        rigidbody2D.drag = 0;
+        rigidbody2D.gravityScale = 0;
+        return rigidbody2D;
+    }
+    private static void CreateOutfits(GameObject shipGO, Ship ship, Dictionary<string, int> outfits)
+    {
+        foreach (var outfit in ship.Outfits)
+        {
+            Type outfitType = Type.GetType(outfit.Key);
+            if (outfitType != null && outfitType.IsSubclassOf(typeof(Outfit)))
+            {
+                shipGO.AddComponent(outfitType);
+            }
+        }
+    }
+    private static void SetShipSprite(GameObject ShipGO, Ship ship)
+    {
+        Sprite sprite = Resources.Load<Sprite>("Images/Sprites/Ships/" + ship.SpriteName);
+        if (!sprite)
+        {
+            Debug.LogError("Sprite not found at path: " + "Images/Sprites/Ships/" + ship.SpriteName);
+        }
+        else
+        {
+            ShipGO.AddComponent<SpriteRenderer>().sprite = sprite;
         }
     }
 }

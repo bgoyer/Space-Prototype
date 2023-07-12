@@ -20,4 +20,26 @@ public abstract class Turning : Outfit
         modifier = modifier > 0f ? Mathf.Min(modifier, 1f) : Mathf.Max(modifier, -1f);
         transform.GetComponent<Rigidbody2D>().AddTorque(Force * -modifier * 100 * Time.deltaTime, ForceMode2D.Impulse);
     }
+    public void RotateTowards(Vector2 dir)
+    {
+        Vector3 forwardVector = transform.transform.up;
+        float angle = Vector3.Angle(forwardVector, dir);
+        if (180 - angle > 2)
+        {
+            if (Vector3.Cross(forwardVector, dir).z <= 0)
+            {
+                transform.GetComponent<Turning>().Rotate(-1);
+            }
+            else if (Vector3.Cross(forwardVector, dir).z > 0)
+            {
+                transform.GetComponent<Turning>().Rotate(1);
+            }
+        }
+        else
+        {
+            float angle2 = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90f; // Subtracting 90 to account for the difference in coordinate systems between Atan2 and Unity's rotation
+            Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle2));
+            transform.transform.SetPositionAndRotation(transform.transform.position, targetRotation);
+        }
+    }
 }

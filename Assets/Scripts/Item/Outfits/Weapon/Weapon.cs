@@ -4,17 +4,19 @@ using System.Collections.Generic;
 
 public class Weapon : Outfit
 {
-    public Weapon(string name, string descritpion, int quantity, int projectileSpeed, string projectileSprite, int weaponDamage, Vector2 barrelTip) : base(name, descritpion, quantity)
+    public Weapon(string name, string descritpion, int quantity, int projectileSpeed, string projectileSprite, int weaponDamage, string projectileType, Vector2 barrelTip) : base(name, descritpion, quantity)
     {
         ProjectileSpeed = projectileSpeed;
         ProjectileSprite = projectileSprite;
         WeaponDamage = weaponDamage;
         BarrelTip = barrelTip;
+        ProjectileType = projectileType;
     }
 
-    public int ProjectileSpeed { get;set; }
-    public string ProjectileSprite { get; set; }
-    public int WeaponDamage { get; set; }
+    public int ProjectileSpeed { get; }
+    public string ProjectileType { get; }
+    public string ProjectileSprite { get; }
+    public int WeaponDamage { get; }
     public Vector2 BarrelTip { get; set; }
 
     public static void Create(string weaponTypeString, GameObject ship)

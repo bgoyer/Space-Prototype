@@ -8,7 +8,7 @@ using System;
 
 public class Player : Pilot
 {
-    Player(string name) : base (name) 
+    public Player(string name) : base (name) 
     { }
 
     PlayerInput input = null;
@@ -64,7 +64,7 @@ public class Player : Pilot
         { 
             ship.Accelerate(accelerateModifier);
         }
-        if (turn)
+        if (turn && !tryReverseThrust)
         {
             ship.Rotate(turnModifier);
         }
@@ -76,15 +76,7 @@ public class Player : Pilot
             }
             else
             {
-                Vector3 forwardVector = ship.transform.up;
-                float angle = Vector3.Angle(forwardVector, ship.GetComponent<Rigidbody2D>().velocity);
-                if (Vector3.Cross(forwardVector, ship.GetComponent<Rigidbody2D>().velocity).z < 0)
-                {
-                    ship.Rotate(-1);
-                }else if(Vector3.Cross(forwardVector, ship.GetComponent<Rigidbody2D>().velocity).z > 0)
-                {
-                    ship.Rotate(1);
-                }
+                 ship.GetComponent<Turning>().RotateTowards(ship.GetComponent<Rigidbody2D>().velocity);
             }
         }
     }
