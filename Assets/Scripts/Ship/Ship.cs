@@ -199,7 +199,22 @@ public class Ship : MonoBehaviour, IDamageable
             Type outfitType = Type.GetType(outfit.Key);
             if (outfitType != null && outfitType.IsSubclassOf(typeof(Outfit)))
             {
-                shipGO.AddComponent(outfitType);
+                Outfit createdOutfit = (Outfit)shipGO.AddComponent(outfitType);
+                if (outfitType.IsSubclassOf(typeof(Weapon)))
+                {
+                    Weapon.Create(nameof(outfitType), shipGO);
+                }
+            }
+            else
+            {
+                if (outfitType == null)
+                {
+                    Debug.LogError("Outfit Type cant be null!");
+                }
+                else
+                {
+                    Debug.LogError(outfit.Key + " is not a subclass of Outfit");
+                }
             }
         }
     }
