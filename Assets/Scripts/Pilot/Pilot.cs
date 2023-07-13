@@ -11,16 +11,5 @@ public class Pilot : MonoBehaviour
 
    public string Name { get; set; }
    public Ship CurrentShip { get; set; }
-   public void Rotate()
-   {
-        
-   }
-
-    public void AssignShip()
-    {
-
-    }
-
-
-
+   
 }
