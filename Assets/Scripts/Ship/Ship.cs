@@ -68,7 +68,6 @@ public class Ship : MonoBehaviour, IDamageable
         if (transform.GetComponent<Thruster>() != null)
         {
             transform.GetComponent<Thruster>().Thrust(modifier);
-            print(transform.GetComponent<Thruster>());
         }else Debug.LogWarning("No Engine Eqiuiped");
     }
     public void Rotate(float modifier)
@@ -134,7 +133,24 @@ public class Ship : MonoBehaviour, IDamageable
                 CMVC.Follow = ShipGO.transform;
                 CMVC.LookAt = ShipGO.transform;
                 
-            } else ShipGO.AddComponent<AI>();
+            }
+            else
+            {
+                
+                if (aiType == "NA")
+                {
+                    aiType = GetRandomPilotType();  
+                }
+                Type AI_Type = Type.GetType(aiType);
+                if (AI_Type != null && AI_Type.IsSubclassOf(typeof(Pilot)))
+                {
+                    ShipGO.AddComponent(AI_Type);
+                }
+                else
+                {
+                    Debug.LogError("Type " + AI_Type + " is not a valid subclass of Pilot");
+                }
+            }
 
             
 
@@ -145,7 +161,18 @@ public class Ship : MonoBehaviour, IDamageable
         }
     }
 
-
+    private static string GetRandomPilotType()
+    {
+        System.Random roll = new();
+        switch (roll.Next(1, 1))
+        {
+            case 1:
+                return "Pirate";
+            default:
+                Debug.LogError("Missing case in the GetRandomPilorType() method in Ship.cs! The roll was: " + roll);
+                return "Error";
+        }
+    }
 
     private static GameObject CreateShipGameObject(string name, Type shipType, Vector3? position, bool isPlayer)
     {

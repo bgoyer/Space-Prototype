@@ -13,16 +13,21 @@ public class Pirate : AI
 		Roam,
 		Patrol,
 		Disabled,
-		Destroyed
+		Destroyed,
+		Idle
 	}
+	Turning turning;
+    private void Start()
+    {
+        Target = GameObject.FindObjectOfType<Player>().gameObject;
+		turning = this.GetComponent<Turning>();
+    }
 
-
-	private AI_State currentState;
+    private AI_State currentState;
     private void FixedUpdate()
     {
-		GetNextState();
-
-		switch (currentState)
+        print(GetNextState());
+        switch (GetNextState())
 		{
 			case AI_State.Attack:
 				if (Personalities.Contains(Personality.Agressive))
@@ -43,7 +48,7 @@ public class Pirate : AI
 		}
 	}
 
-	private void GetNextState() 
+	private AI_State GetNextState() 
 	{
 		switch (currentState)
 		{
@@ -51,20 +56,25 @@ public class Pirate : AI
 				if (IsDisabled())
 				{
 					currentState = AI_State.Disabled;
-					break;
+                    return AI_State.Disabled;
 				}
+				return AI_State.Attack;
 
-				break;
+				
 			case AI_State.Roam:
-				break;
+				return AI_State.Roam;
+
 			case AI_State.Patrol:
-				break;
+				return AI_State.Patrol;
+
 			case AI_State.Disabled:
-				break;
+				return AI_State.Disabled;
+
 			case AI_State.Destroyed:
-				break;
+				return AI_State.Destroyed;
+
 			default:
-				break;
+				return AI_State.Idle;
 		}
 
 	}
@@ -78,6 +88,7 @@ public class Pirate : AI
 	}
 	private void Attack_Agressive()
 	{
-
+        turning.RotateTowards((Target.transform.position).normalized);
+		
 	}
 }

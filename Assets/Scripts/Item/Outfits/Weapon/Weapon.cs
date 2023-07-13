@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 public class Weapon : Outfit
 {
@@ -33,7 +35,8 @@ public class Weapon : Outfit
                     ship.GetComponent<Ship>().WeaponSlots[weaponSlot.Key] = false;
                     break;
                 } 
-            } 
+            }
+            Debug.LogWarning(ship.name + " doesnt have any free gun slots!");
         }
     }
 }
