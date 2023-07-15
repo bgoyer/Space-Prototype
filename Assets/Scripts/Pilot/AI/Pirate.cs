@@ -17,10 +17,12 @@ public class Pirate : AI
 		Idle
 	}
 	Turning turning;
+	Thruster thruster;
     private void Start()
     {
         Target = GameObject.FindObjectOfType<Player>().gameObject;
 		turning = this.GetComponent<Turning>();
+		thruster = this.GetComponent<Thruster>();
     }
 
     private AI_State currentState;
@@ -88,7 +90,10 @@ public class Pirate : AI
 	}
 	private void Attack_Agressive()
 	{
-        turning.RotateTowards((Target.transform.position).normalized);
-		
+        turning.RotateTowards(transform.position - Target.transform.position);
+		if (Vector3.Distance(Target.transform.position, transform.position) >= 1)
+		{
+			thruster.Thrust(1f);
+		}
 	}
 }

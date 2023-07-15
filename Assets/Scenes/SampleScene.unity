@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86ca1a392ac70034bb21a330843d6360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Parralax: 1500
+  Parralax: 100
 --- !u!33 &61776946
 MeshFilter:
   m_ObjectHideFlags: 0

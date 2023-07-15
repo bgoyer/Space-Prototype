@@ -76,7 +76,7 @@ public class Player : Pilot
             }
             else
             {
-                 ship.GetComponent<Turning>().RotateTowards(ship.GetComponent<Rigidbody2D>().velocity);
+                 ship.GetComponent<Turning>().RotateTowards(-ship.GetComponent<Rigidbody2D>().velocity);
             }
         }
     }
