@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public abstract class Turning : Outfit
 {
@@ -20,19 +21,22 @@ public abstract class Turning : Outfit
         modifier = modifier > 0f ? Mathf.Min(modifier, 1f) : Mathf.Max(modifier, -1f);
         transform.GetComponent<Rigidbody2D>().AddTorque(Force * -modifier * 100 * Time.deltaTime, ForceMode2D.Impulse);
     }
-    public void RotateTowards(Vector3 dir)
+    public bool RotateTowards(Vector3 dir)
     {
         Vector3 forwardVector = transform.transform.up;
         float angle = Vector3.Angle(forwardVector, dir);
-        if (angle > 2)
+        print(180 - angle);
+        if (180 - angle > 2)
         {
             if (Vector3.Cross(forwardVector, dir).z <= 0)
             {
                 transform.GetComponent<Turning>().Rotate(-1);
+                return false;
             }
             else if (Vector3.Cross(forwardVector, dir).z > 0)
             {
                 transform.GetComponent<Turning>().Rotate(1);
+                return false;
             }
         }
         else
@@ -40,6 +44,8 @@ public abstract class Turning : Outfit
             float angle2 = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 90f; // Subtracting 90 to account for the difference in coordinate systems between Atan2 and Unity's rotation
             Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle2));
             transform.transform.SetPositionAndRotation(transform.transform.position, targetRotation);
+            return true;
         }
+        return true;
     }
 }

@@ -40,6 +40,7 @@ public class Pirate : AI
 			case AI_State.Roam:
 				break;
 			case AI_State.Patrol:
+				Patrol();
 				break;
 			case AI_State.Disabled:
 				break;
@@ -59,6 +60,10 @@ public class Pirate : AI
 				{
 					currentState = AI_State.Disabled;
                     return AI_State.Disabled;
+				}
+				if (Vector3.Distance(transform.transform.position, Target.transform.position) > 600)
+				{
+					return AI_State.Patrol;
 				}
 				return AI_State.Attack;
 
@@ -90,10 +95,19 @@ public class Pirate : AI
 	}
 	private void Attack_Agressive()
 	{
-        turning.RotateTowards(transform.position - Target.transform.position);
+		print(turning.RotateTowards(transform.position - Target.transform.position));
+		if (turning.RotateTowards(transform.position - Target.transform.position)) {
+            thruster.Thrust(1f);
+        }
+        
 		if (Vector3.Distance(Target.transform.position, transform.position) >= 1)
 		{
-			thruster.Thrust(1f);
+			
 		}
+	}
+	private void Patrol() 
+	{
+		_ = new System.Random();
+		 
 	}
 }
