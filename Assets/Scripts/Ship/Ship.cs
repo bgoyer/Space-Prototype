@@ -121,6 +121,8 @@ public class Ship : MonoBehaviour, IDamageable
 
             SetShipSprite(ShipGO, ship);
 
+            ShipGO.AddComponent<PolygonCollider2D>().isTrigger = true;
+
             CreateOutfits(ShipGO, ship, ship.Outfits);
 
 
@@ -178,7 +180,6 @@ public class Ship : MonoBehaviour, IDamageable
     {
         GameObject ShipGO = new(name);
         ShipGO.AddComponent(shipType);
-        ShipGO.transform.localScale = new Vector3(.1f, .1f, 1f);
 
         if (position.HasValue)
         {
@@ -190,7 +191,7 @@ public class Ship : MonoBehaviour, IDamageable
             {
                 System.Random _random = new();
                 Player player = GameObject.FindAnyObjectByType<Player>();
-                ShipGO.transform.position = _random.Next(-1, 1) * player.transform.parent.position + new Vector3(_random.Next(-100, 100), _random.Next(-100, 100));
+                ShipGO.transform.position = _random.Next(-1, 1) * player.transform.parent.position + new Vector3(_random.Next(20, 100), _random.Next(20, 100));
             }
             else
             {
@@ -221,36 +222,40 @@ public class Ship : MonoBehaviour, IDamageable
     }
     private static void CreateOutfits(GameObject shipGO, Ship ship, Dictionary<string, int> outfits)
     {
-        foreach (var outfit in ship.Outfits)
+        foreach (var outfit in outfits)
         {
-            Type outfitType = Type.GetType(outfit.Key);
-            if (outfitType != null && outfitType.IsSubclassOf(typeof(Outfit)))
+            for (int i = 0; i < outfit.Value; i++)
             {
-                Outfit createdOutfit = (Outfit)shipGO.AddComponent(outfitType);
-                if (outfitType.IsSubclassOf(typeof(Weapon)))
+                Type outfitType = Type.GetType(outfit.Key);
+                if (outfitType != null && outfitType.IsSubclassOf(typeof(Outfit)))
                 {
-                    Weapon.Create(nameof(outfitType), shipGO);
-                }
-            }
-            else
-            {
-                if (outfitType == null)
-                {
-                    Debug.LogError("Outfit Type cant be null!");
+                    Outfit createdOutfit = (Outfit)shipGO.AddComponent(outfitType);
+                    if (outfitType.IsSubclassOf(typeof(Weapon)))
+                    {
+                        Weapon.Create(nameof(outfitType), shipGO);
+                    }
                 }
                 else
                 {
-                    Debug.LogError(outfit.Key + " is not a subclass of Outfit");
+                    if (outfitType == null)
+                    {
+                        Debug.LogError("Outfit Type cant be null!");
+                    }
+                    else
+                    {
+                        Debug.LogError(outfit.Key + " is not a subclass of Outfit");
+                    }
                 }
+
             }
         }
     }
     private static void SetShipSprite(GameObject ShipGO, Ship ship)
     {
-        Sprite sprite = Resources.Load<Sprite>("Images/Sprites/Ships/" + ship.SpriteName);
+        Sprite sprite = Resources.Load<Sprite>("Images/Textures/Ships/" + ship.SpriteName);
         if (!sprite)
         {
-            Debug.LogError("Sprite not found at path: " + "Images/Sprites/Ships/" + ship.SpriteName);
+            Debug.LogError("Sprite not found at path: " + "Images/Textures/Ships" + ship.SpriteName);
         }
         else
         {

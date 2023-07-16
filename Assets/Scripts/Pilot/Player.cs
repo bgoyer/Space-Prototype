@@ -18,7 +18,8 @@ public class Player : Pilot
     float accelerateModifier;
     bool turn = false;
     float turnModifier;
-    bool tryReverseThrust = false;
+    bool reverseThrust = false;
+    bool shoot = false;
     
 
     private void Awake()
@@ -31,7 +32,8 @@ public class Player : Pilot
         input.Enable();
         input.Player.Accelerate.performed += OnMovementPerformed;
         input.Player.Rotate.performed += OnRotatePerformed;
-        input.Player.TryReverseThrust.performed += TryReverseThrust;
+        input.Player.TryReverseThrust.performed += OnReverseThrustPerformed;
+        input.Player.Shoot.performed += OnShootPerformed;
     }
 
 
@@ -40,7 +42,8 @@ public class Player : Pilot
         input.Disable();
         input.Player.Accelerate.performed -= OnMovementPerformed;
         input.Player.Rotate.performed -= OnRotatePerformed;
-        input.Player.TryReverseThrust.performed -= TryReverseThrust;
+        input.Player.TryReverseThrust.performed -= OnReverseThrustPerformed;
+        input.Player.Shoot.performed -= OnShootPerformed;
     }
 
     void OnMovementPerformed(InputAction.CallbackContext input)
@@ -53,9 +56,13 @@ public class Player : Pilot
         turnModifier = input.ReadValue<float>();
         turn = !turn;
     } 
-    private void TryReverseThrust(InputAction.CallbackContext input)
+    private void OnReverseThrustPerformed(InputAction.CallbackContext input)
     {
-        tryReverseThrust = !tryReverseThrust;
+        reverseThrust = !reverseThrust;
+    }
+    private void OnShootPerformed(InputAction.CallbackContext input)
+    {
+        shoot = !shoot;
     }
 
     private void FixedUpdate()
@@ -64,11 +71,11 @@ public class Player : Pilot
         { 
             ship.Accelerate(accelerateModifier);
         }
-        if (turn && !tryReverseThrust)
+        if (turn && !reverseThrust)
         {
             ship.Rotate(turnModifier);
         }
-        if (tryReverseThrust)
+        if (reverseThrust)
         {
             if (ship.GetComponent<ReverseThruster>())
             {
@@ -76,7 +83,14 @@ public class Player : Pilot
             }
             else
             {
-                 ship.GetComponent<Turning>().RotateTowards(-ship.GetComponent<Rigidbody2D>().velocity);
+                 ship.GetComponent<Turning>().RotateTowards(ship.GetComponent<Rigidbody2D>().velocity);
+            }
+        }
+        if (shoot)
+        {
+            foreach (var weapon in ship.GetComponents<Weapon>())
+            {
+                weapon.Fire();
             }
         }
     }

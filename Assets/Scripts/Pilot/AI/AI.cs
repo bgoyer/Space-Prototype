@@ -13,6 +13,7 @@ public class AI : Pilot
 
     public Personality[] Personalities { get; set; }
     public GameObject Target { get; set; }
+    public Vector3? TargetPosition { get; set; }
     public enum Personality
     {
         Agressive

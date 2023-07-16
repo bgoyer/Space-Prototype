@@ -25,7 +25,6 @@ public abstract class Turning : Outfit
     {
         Vector3 forwardVector = transform.transform.up;
         float angle = Vector3.Angle(forwardVector, dir);
-        print(180 - angle);
         if (180 - angle > 2)
         {
             if (Vector3.Cross(forwardVector, dir).z <= 0)

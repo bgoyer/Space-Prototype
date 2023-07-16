@@ -18,6 +18,7 @@ public class Pirate : AI
 	}
 	Turning turning;
 	Thruster thruster;
+
     private void Start()
     {
         Target = GameObject.FindObjectOfType<Player>().gameObject;
@@ -28,7 +29,7 @@ public class Pirate : AI
     private AI_State currentState;
     private void FixedUpdate()
     {
-        print(GetNextState());
+        //print(GetNextState());
         switch (GetNextState())
 		{
 			case AI_State.Attack:
@@ -63,6 +64,7 @@ public class Pirate : AI
 				}
 				if (Vector3.Distance(transform.transform.position, Target.transform.position) > 600)
 				{
+					currentState = AI_State.Patrol;
 					return AI_State.Patrol;
 				}
 				return AI_State.Attack;
@@ -95,19 +97,27 @@ public class Pirate : AI
 	}
 	private void Attack_Agressive()
 	{
-		print(turning.RotateTowards(transform.position - Target.transform.position));
-		if (turning.RotateTowards(transform.position - Target.transform.position)) {
+		if (TargetPosition != null)
+		{
+			TargetPosition = null;
+		}
+		if (Target == null)
+		{
+			Target = GameObject.FindAnyObjectByType<Player>().gameObject;
+		}
+		if (turning.RotateTowards(transform.position - Target.transform.position)) { 
             thruster.Thrust(1f);
         }
-        
-		if (Vector3.Distance(Target.transform.position, transform.position) >= 1)
-		{
-			
-		}
 	}
 	private void Patrol() 
 	{
-		_ = new System.Random();
-		 
+		if (Target)
+		{
+			Target = null;
+		}
+		if (TargetPosition != null)
+		{
+
+		}	 
 	}
 }
