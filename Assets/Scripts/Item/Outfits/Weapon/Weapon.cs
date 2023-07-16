@@ -35,7 +35,8 @@ public class Weapon : Outfit
                 GameObject _projectile = new();
                 _projectile.transform.parent = transform;
                 _projectile.AddComponent<Rigidbody2D>().gravityScale = 0;
-                _projectile.transform.SetLocalPositionAndRotation(BarrelTip, transform.rotation);
+                _projectile.transform.localPosition = BarrelTip;
+                _projectile.transform.rotation = transform.rotation;
                 _projectile.AddComponent(projectileType);
                 Sprite sprite = Resources.Load<Sprite>("Images/Textures/Projectiles/" + ProjectileSprite);
                 if (!sprite)
