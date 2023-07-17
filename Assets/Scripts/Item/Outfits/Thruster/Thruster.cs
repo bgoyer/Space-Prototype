@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -19,9 +20,9 @@ public abstract class Thruster : Outfit
     /// <param name="modifier"></param>
     public void Thrust(float modifier)
     {
-        print(transform.GetComponent<Rigidbody2D>().velocity.sqrMagnitude);
+        
         modifier = modifier > 0f ? Mathf.Min(modifier, 1f) : Mathf.Max(modifier, -1f);
-        if (transform.GetComponent<Rigidbody2D>().velocity.sqrMagnitude <= .5)
+        if (transform.GetComponent<Rigidbody2D>().velocity.sqrMagnitude <= .75)
         {
             transform.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * Force * modifier * Time.deltaTime, ForceMode2D.Impulse);
         }

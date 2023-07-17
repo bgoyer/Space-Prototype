@@ -10,7 +10,7 @@ public class basi : MonoBehaviour
     void Start()
     {
         Ship.Create("SS Normandy", "Hawk", new Vector2(-6, 0), true);
-        //Ship.Create("SS KMS", "Hawk", new Vector2(-7, 0), false, "Pirate");
+        Ship.Create("SS KMS", "Hawk", new Vector2(-7, 0), false, "Pirate");
 
     }
 }

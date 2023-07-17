@@ -18,7 +18,8 @@ public class Pirate : AI
 	}
 	Turning turning;
 	Thruster thruster;
-
+	Vector2 previousVelocity;
+	Vector2 targetAcceleration;
     private void Start()
     {
         Target = GameObject.FindObjectOfType<Player>().gameObject;
@@ -105,9 +106,14 @@ public class Pirate : AI
 		{
 			Target = GameObject.FindAnyObjectByType<Player>().gameObject;
 		}
-		if (turning.RotateTowards(transform.position - Target.transform.position)) { 
-            thruster.Thrust(1f);
-        }
+		if (turning.RotateTowards(transform.position - GetTargetLeadPosition(Target.transform, Target.GetComponent<Rigidbody2D>().velocity, 5)))
+		{
+			foreach (var weapon in GetComponents<Weapon>())
+			{
+                thruster.Thrust(1f);
+                weapon.Fire();
+			}
+		}
 	}
 	private void Patrol() 
 	{
@@ -120,4 +126,24 @@ public class Pirate : AI
 
 		}	 
 	}
+    public Vector3 GetTargetLeadPosition(Transform target, Vector2 targetVelocity, float projectileSpeed)
+    {
+        // Calculate the time to target.
+        float timeToTarget = Vector3.Distance(target.position, this.transform.position) / projectileSpeed;
+
+        Vector2 currentVelocity = target.GetComponent<Rigidbody2D>().velocity;
+		if (previousVelocity != null)
+		{
+			Vector2 acceleration = (currentVelocity - previousVelocity) / Time.deltaTime;
+		}
+        previousVelocity = currentVelocity;
+
+
+		if (targetAcceleration != null)
+		{
+			Vector3 targetFuturePosition = (Vector2)target.position + targetVelocity * timeToTarget + 0.5f * targetAcceleration * Mathf.Pow(timeToTarget, 2);
+			return targetFuturePosition;
+		}
+		return new Vector2();
+    }
 }

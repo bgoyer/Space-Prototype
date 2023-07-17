@@ -22,6 +22,12 @@ public class Weapon : Outfit
     public float Reload { get; }
 
     private float nextShot = 0;
+    private Transform bulletHolder;
+
+    private void Start()
+    {
+       bulletHolder = GameObject.Find("BulletHolder").transform;
+    }
 
     public void Fire()
     {
@@ -29,15 +35,16 @@ public class Weapon : Outfit
         {
             nextShot = Time.timeSinceLevelLoad + Reload;
             Type projectileType = Type.GetType(ProjectileType);
-            print(BarrelTip);
+
             if (projectileType != null && projectileType.IsSubclassOf(typeof(Projectile)))
             {
                 GameObject _projectile = new();
-                _projectile.transform.parent = transform;
+                _projectile.transform.parent = bulletHolder;
                 _projectile.AddComponent<Rigidbody2D>().gravityScale = 0;
-                _projectile.transform.localPosition = BarrelTip;
+                _projectile.transform.position = transform.position;
                 _projectile.transform.rotation = transform.rotation;
-                _projectile.AddComponent(projectileType);
+                Projectile p = (Projectile)_projectile.AddComponent(projectileType);
+                p.ParentShip = gameObject;
                 Sprite sprite = Resources.Load<Sprite>("Images/Textures/Projectiles/" + ProjectileSprite);
                 if (!sprite)
                 {
